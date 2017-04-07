@@ -24,3 +24,14 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+" JSX
+let g:jsx_ext_required = 0
+" Tern
+let g:tern_map_keys = 1
+let g:tern_show_argument_hints = 'on_hold'
+let g:tern_show_signature_in_pum = 1
+autocmd FileType javascript setlocal omnifunc=tern#Complete
+set expandtab
+set shiftwidth=2
+set softtabstop=2
+filetype plugin indent on
