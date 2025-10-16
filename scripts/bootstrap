@@ -17,6 +17,7 @@ SECRETS_EXAMPLE="$REPO/config/.config/shell/secrets.zsh.example"
 OMZ_DIR="$HOME/.oh-my-zsh"
 P10K_DIR="$HOME/powerlevel10k"
 NVIM_CONFIG_DIR="$HOME/.config/nvim"
+GHOSTTY_CONFIG_DIR="$HOME/.config/ghostty"
 
 # Update behavior (set UPDATE_TOOLS=yes to pull latest versions)
 UPDATE_TOOLS="${UPDATE_TOOLS:-no}"
@@ -27,11 +28,7 @@ declare -A LINKS
 LINKS[$HOME/.zprofile]="$REPO/zsh/.zprofile"
 LINKS[$HOME/.zshrc]="$REPO/zsh/.zshrc"
 LINKS[$HOME/.p10k.zsh]="$REPO/p10k/.p10k.zsh"
-
-# Option A (recommended): point ZSH_CUSTOM at your repo in .zshrc
-# Option B (symlink OMZ custom dir to your repo)
-# Enable Option B by uncommenting the next line:
-# LINKS[$HOME/.oh-my-zsh/custom]="$REPO/zsh/.oh-my-zsh/custom"
+LINKS[$GHOSTTY_CONFIG_DIR]="$REPO/ghostty"
 
 # --- Helpers ----------------------------------------------------------------
 need_cmd() { command -v "$1" >/dev/null 2>&1 || { echo "Missing: $1"; exit 1; }; }
@@ -201,10 +198,12 @@ echo "Next steps:"
 echo "  1. Open a new terminal or run: exec zsh"
 echo "  2. Edit secrets file: vi ~/.config/shell/secrets.zsh"
 echo "  3. Run neovim to install plugins: nvim"
+echo "  4. Restart Ghostty to load new config (or press Cmd+Shift+,)"
 echo ""
 echo "Tool management:"
 echo "  • Update all tools: UPDATE_TOOLS=yes ~/dotfiles/scripts/bootstrap"
 echo "  • Update Oh My Zsh: omz update"
 echo "  • Update Powerlevel10k: cd ~/powerlevel10k && git pull"
 echo "  • Update LazyVim plugins: nvim and run :Lazy sync"
+echo "  • Reload Ghostty config: Cmd+Shift+, (or restart Ghostty)"
 echo ""

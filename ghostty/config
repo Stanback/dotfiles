@@ -1,0 +1,88 @@
+# Ghostty Terminal Configuration
+# ================================
+# This config is automatically symlinked by ~/dotfiles/scripts/bootstrap
+# to: ~/.config/ghostty (XDG standard path)
+#
+# Reload config in Ghostty: Cmd+Shift+, (or via menu)
+# See all options: ghostty +show-config --default --docs
+# Full docs: https://ghostty.org/docs/config
+
+# ——— Font & text ———————————————————————————————————————————————————————————
+font-family = FiraCode Nerd Font
+font-size = 13.5
+
+# Slightly heavier glyphs on macOS help readability at small sizes
+font-thicken = true
+font-thicken-strength = 20
+
+# If you ever want fewer ligatures, uncomment:
+# font-feature = -calt,-liga,-dlig
+
+# ——— Background & transparency —————————————————————————————————————————————
+background-opacity = 0.92
+
+# Apply opacity to app-drawn backgrounds too (e.g., neovim/tmux statuslines)
+background-opacity-cells = true
+
+# Gentle blur (macOS supports this)
+background-blur = 12
+
+# Dim unfocused splits just a touch
+unfocused-split-opacity = 0.85
+
+# ——— Selection & clipboard —————————————————————————————————————————————————
+copy-on-select = clipboard           # highlight to copy
+selection-clear-on-copy = false
+right-click-action = copy-or-paste
+clipboard-trim-trailing-spaces = true
+clipboard-paste-protection = true    # confirm multi-line pastes
+
+# ——— Mouse & scroll ————————————————————————————————————————————————————————
+mouse-hide-while-typing = true
+mouse-scroll-multiplier = 2.0        # trackpad-friendly
+
+# ——— Window feel ———————————————————————————————————————————————————————————
+window-padding-x = 6
+window-padding-y = 4
+window-padding-balance = true
+
+# ——— Links —————————————————————————————————————————————————————————————————
+link-previews = osc8                  # previews only for true terminal hyperlinks
+
+# ——— Cursor ergonomics —————————————————————————————————————————————————————
+cursor-style = bar
+cursor-opacity = 0.85
+cursor-click-to-move = true          # requires shell-integration (see below)
+
+# ——— Shell integration —————————————————————————————————————————————————————
+# Ghostty has BUILT-IN shell integration (no iTerm2 shell integration needed!)
+# This auto-injects code into zsh/bash/fish/elvish to enable:
+#   • jump_to_prompt navigation (scroll through command prompts)
+#   • cursor-click-to-move (Alt+click to position cursor)
+#   • Smart terminal closing (no confirmation if at prompt)
+#   • Command output selection (Cmd+triple-click)
+#   • Directory persistence (new terminals open in last working directory)
+#   • Better cursor styling at prompts
+shell-integration = true
+
+# ——— Scrollback: size & "search" workaround ————————————————————————————————
+scrollback-limit = 134217728         # 128 MiB per pane
+
+# Ghostty doesn't have native search yet, so these keybinds write scrollback
+# to a temp file and open it in your editor for searching
+keybind = super+f=write_scrollback_file:open       # Cmd+F → open full scrollback in editor
+keybind = super+shift+f=write_screen_file:open     # Cmd+Shift+F → visible screen only
+
+# ——— Zoom/splits that match your flow ——————————————————————————————————————
+keybind = super+enter=toggle_split_zoom
+keybind = super+shift+d=new_tab
+
+# ——— Custom keybinds ———————————————————————————————————————————————————————
+# Shift+Enter sends Escape+Enter (useful for some CLI tools)
+keybind = shift+enter=text:\x1b\r
+
+# ——— Optional: quick drop-down terminal on macOS ——————————————————————————
+# Uncomment and customize if you want a Quake-style dropdown terminal:
+# keybind = super+grave=toggle_quick_terminal
+# quick-terminal-position = top
+# quick-terminal-size = 35%
