@@ -95,6 +95,6 @@ keybind = shift+enter=text:\x1b\r
 
 # ——— Optional: quick drop-down terminal on macOS ——————————————————————————
 # Uncomment and customize if you want a Quake-style dropdown terminal:
-# keybind = super+grave=toggle_quick_terminal
-# quick-terminal-position = top
+# keybind = global:cmd+grave_accent=toggle_quick_terminal
+# quick-terminal-position = bottom
 # quick-terminal-size = 35%
