@@ -73,7 +73,8 @@ If you already have zsh configs:
 
 ### Not in this repo:
 - Oh My Zsh core (installed at `~/.oh-my-zsh` by bootstrap)
-- Powerlevel10k theme (cloned by bootstrap)
+- Powerlevel10k theme (cloned to `~/powerlevel10k` by bootstrap)
+- LazyVim (installed at `~/.config/nvim` by bootstrap)
 - Actual secrets (`~/.config/shell/secrets.zsh`)
 - Machine-specific config (`local.zsh`)
 
@@ -100,31 +101,43 @@ Create `zsh/.oh-my-zsh/custom/local.zsh` (gitignored) for machine-specific confi
 
 ## Updating
 
-### Update Oh My Zsh
+### Update All Tools at Once
+```bash
+UPDATE_TOOLS=yes ~/dotfiles/scripts/bootstrap
+```
+
+### Update Individual Tools
+
+**Oh My Zsh:**
 ```bash
 omz update
 ```
 
-### Update Powerlevel10k
+**Powerlevel10k:**
 ```bash
-cd ~/powerlevel10k
-git pull
+cd ~/powerlevel10k && git pull
 ```
 
-### Update Your Dotfiles
+**LazyVim plugins:**
 ```bash
-cd ~/dotfiles
-git pull
+nvim  # then run :Lazy sync
+```
+
+**Your Dotfiles:**
+```bash
+cd ~/dotfiles && git pull
 ```
 
 ## Bootstrap Script Features
 
 - Installs Oh My Zsh if missing (with `KEEP_ZSHRC=yes`)
 - Installs Powerlevel10k theme if missing
+- Installs LazyVim (Neovim distribution) if nvim is present
 - Creates timestamped backups of existing files
 - Symlinks configs from repo to home directory
 - Creates secrets file from template (600 permissions)
 - Idempotent (safe to run multiple times)
+- Optional: Update all tools with `UPDATE_TOOLS=yes`
 
 ## Customization
 

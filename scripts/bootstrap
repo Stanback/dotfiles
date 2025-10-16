@@ -13,6 +13,14 @@ SECRETS_DIR="$HOME/.config/shell"
 SECRETS_FILE="$SECRETS_DIR/secrets.zsh"
 SECRETS_EXAMPLE="$REPO/config/.config/shell/secrets.zsh.example"
 
+# Installation directories
+OMZ_DIR="$HOME/.oh-my-zsh"
+P10K_DIR="$HOME/powerlevel10k"
+NVIM_CONFIG_DIR="$HOME/.config/nvim"
+
+# Update behavior (set UPDATE_TOOLS=yes to pull latest versions)
+UPDATE_TOOLS="${UPDATE_TOOLS:-no}"
+
 # Files/dirs to link: target_path -> repo_relative_path
 # Add/remove as you like.
 declare -A LINKS
@@ -69,22 +77,66 @@ echo "==> Dotfiles bootstrap"
 [[ -d "$REPO" ]] || { echo "Repo not found at $REPO"; exit 1; }
 [[ -f "$REPO/zsh/.zshrc" ]] || { echo "Expected $REPO/zsh/.zshrc"; exit 1; }
 
-# --- Install Oh My Zsh (without touching your zshrc) ------------------------
-if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
+# --- Install Oh My Zsh ------------------------------------------------------
+if [[ ! -d "$OMZ_DIR" ]]; then
   echo "==> Installing Oh My Zsh (KEEP_ZSHRC)"
   RUNZSH=no CHSH=no KEEP_ZSHRC=yes \
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  echo "  ✓ Oh My Zsh installed"
 else
-  echo "==> Oh My Zsh present"
+  echo "==> Oh My Zsh detected"
+  if [[ "$UPDATE_TOOLS" == "yes" ]]; then
+    echo "  • Updating Oh My Zsh..."
+    (cd "$OMZ_DIR" && git pull --quiet)
+    echo "  ✓ Updated"
+  else
+    echo "  • Skipping update (set UPDATE_TOOLS=yes to update)"
+  fi
 fi
 
-# --- Install Powerlevel10k theme (if not present) ---------------------------
-P10K_DIR="$HOME/powerlevel10k"
+# --- Install Powerlevel10k theme --------------------------------------------
 if [[ ! -d "$P10K_DIR" ]]; then
   echo "==> Installing Powerlevel10k theme"
   git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$P10K_DIR"
+  echo "  ✓ Powerlevel10k installed"
 else
-  echo "==> Powerlevel10k theme present"
+  echo "==> Powerlevel10k detected"
+  if [[ "$UPDATE_TOOLS" == "yes" ]]; then
+    echo "  • Updating Powerlevel10k..."
+    (cd "$P10K_DIR" && git pull --quiet)
+    echo "  ✓ Updated"
+  else
+    echo "  • Skipping update (set UPDATE_TOOLS=yes to update)"
+  fi
+fi
+
+# --- Install LazyVim --------------------------------------------------------
+if [[ ! -d "$NVIM_CONFIG_DIR" ]]; then
+  echo "==> Installing LazyVim"
+
+  # Check if nvim is installed
+  if ! command -v nvim >/dev/null 2>&1; then
+    echo "  ⚠ Neovim not found. Install with: brew install neovim"
+    echo "  • Skipping LazyVim installation"
+  else
+    # Backup existing Neovim config if it exists
+    if [[ -e "$HOME/.config/nvim" || -L "$HOME/.config/nvim" ]]; then
+      backup_path "$HOME/.config/nvim"
+    fi
+
+    # Clone LazyVim starter
+    git clone https://github.com/LazyVim/starter "$NVIM_CONFIG_DIR"
+
+    # Remove .git directory so it doesn't interfere with your dotfiles repo
+    rm -rf "$NVIM_CONFIG_DIR/.git"
+
+    echo "  ✓ LazyVim installed"
+    echo "  • Run 'nvim' to complete installation (plugins will auto-install)"
+  fi
+else
+  echo "==> Neovim config detected at $NVIM_CONFIG_DIR"
+  echo "  • Skipping LazyVim installation (config already exists)"
+  echo "  • To reinstall LazyVim, backup and remove $NVIM_CONFIG_DIR first"
 fi
 
 # --- Secrets file -----------------------------------------------------------
@@ -140,5 +192,17 @@ if command -v fc-list >/dev/null 2>&1; then
 fi
 
 # --- Summary ----------------------------------------------------------------
-echo "==> Done."
-echo "Open a new terminal or run: exec zsh"
+echo ""
+echo "==> Bootstrap complete!"
+echo ""
+echo "Next steps:"
+echo "  1. Open a new terminal or run: exec zsh"
+echo "  2. Edit secrets file: vi ~/.config/shell/secrets.zsh"
+echo "  3. Run neovim to install plugins: nvim"
+echo ""
+echo "Tool management:"
+echo "  • Update all tools: UPDATE_TOOLS=yes ~/dotfiles/scripts/bootstrap"
+echo "  • Update Oh My Zsh: omz update"
+echo "  • Update Powerlevel10k: cd ~/powerlevel10k && git pull"
+echo "  • Update LazyVim plugins: nvim and run :Lazy sync"
+echo ""
