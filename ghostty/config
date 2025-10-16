@@ -34,7 +34,6 @@ unfocused-split-opacity = 0.85
 # highlight to copy
 copy-on-select = clipboard
 selection-clear-on-copy = false
-right-click-action = copy-or-paste
 clipboard-trim-trailing-spaces = true
 # confirm multi-line pastes
 clipboard-paste-protection = true
