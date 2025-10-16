@@ -1,0 +1,20 @@
+# local.zsh.example
+#
+# This file is for machine-specific configuration that shouldn't be in your repo.
+# Copy this to local.zsh (which is gitignored) and customize as needed.
+#
+# Example uses:
+# - Machine-specific PATH additions
+# - Work vs personal machine differences
+# - Experimental aliases you're testing
+# - Local proxy settings
+# - Custom PS1 tweaks
+
+# Example: Load work-specific config on work machine
+# if [[ "$(hostname)" == "work-laptop.local" ]]; then
+#   export WORK_MODE=true
+#   alias kubectl="kubectl --context=work-cluster"
+# fi
+
+# Example: Add local bin directory
+# export PATH="$HOME/.local/bin:$PATH"

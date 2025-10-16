@@ -1,0 +1,144 @@
+#!/usr/bin/env zsh
+set -euo pipefail
+
+# Ensure standard PATH for commands
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+
+# --- Settings ---------------------------------------------------------------
+REPO="${REPO:-$HOME/dotfiles}"
+TS="$(date +%Y%m%d-%H%M%S)"
+BACKUP_SUFFIX=".$TS.bak"
+
+SECRETS_DIR="$HOME/.config/shell"
+SECRETS_FILE="$SECRETS_DIR/secrets.zsh"
+SECRETS_EXAMPLE="$REPO/config/.config/shell/secrets.zsh.example"
+
+# Files/dirs to link: target_path -> repo_relative_path
+# Add/remove as you like.
+declare -A LINKS
+LINKS[$HOME/.zprofile]="$REPO/zsh/.zprofile"
+LINKS[$HOME/.zshrc]="$REPO/zsh/.zshrc"
+LINKS[$HOME/.p10k.zsh]="$REPO/p10k/.p10k.zsh"
+
+# Option A (recommended): point ZSH_CUSTOM at your repo in .zshrc
+# Option B (symlink OMZ custom dir to your repo)
+# Enable Option B by uncommenting the next line:
+# LINKS[$HOME/.oh-my-zsh/custom]="$REPO/zsh/.oh-my-zsh/custom"
+
+# --- Helpers ----------------------------------------------------------------
+need_cmd() { command -v "$1" >/dev/null 2>&1 || { echo "Missing: $1"; exit 1; }; }
+
+same_link_target() {
+  local target="$1" src="$2"
+  [[ -L "$target" ]] && [[ "$(readlink "$target")" == "$src" ]]
+}
+
+backup_if_exists() {
+  local path="$1"
+  if [[ -e "$path" || -L "$path" ]]; then
+    # If it's already the right symlink, no backup needed.
+    return 0
+  fi
+}
+
+backup_path() {
+  local path="$1"
+  if [[ -e "$path" || -L "$path" ]]; then
+    local bak="${path}${BACKUP_SUFFIX}"
+    echo "  • Backing up: $path -> $bak"
+    mv -f "$path" "$bak"
+  fi
+}
+
+link_file() {
+  local target="$1" src="$2"
+  mkdir -p "$(dirname "$target")"
+  if same_link_target "$target" "$src"; then
+    echo "  • OK (linked already): $target"
+  else
+    if [[ -e "$target" || -L "$target" ]]; then
+      backup_path "$target"
+    fi
+    ln -s "$src" "$target"
+    echo "  • Linked: $target -> $src"
+  fi
+}
+
+# --- Preflight --------------------------------------------------------------
+echo "==> Dotfiles bootstrap"
+[[ -d "$REPO" ]] || { echo "Repo not found at $REPO"; exit 1; }
+[[ -f "$REPO/zsh/.zshrc" ]] || { echo "Expected $REPO/zsh/.zshrc"; exit 1; }
+
+# --- Install Oh My Zsh (without touching your zshrc) ------------------------
+if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
+  echo "==> Installing Oh My Zsh (KEEP_ZSHRC)"
+  RUNZSH=no CHSH=no KEEP_ZSHRC=yes \
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+else
+  echo "==> Oh My Zsh present"
+fi
+
+# --- Install Powerlevel10k theme (if not present) ---------------------------
+P10K_DIR="$HOME/powerlevel10k"
+if [[ ! -d "$P10K_DIR" ]]; then
+  echo "==> Installing Powerlevel10k theme"
+  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$P10K_DIR"
+else
+  echo "==> Powerlevel10k theme present"
+fi
+
+# --- Secrets file -----------------------------------------------------------
+echo "==> Ensuring secrets file"
+mkdir -p "$SECRETS_DIR"
+if [[ ! -f "$SECRETS_FILE" ]]; then
+  if [[ -f "$SECRETS_EXAMPLE" ]]; then
+    cp "$SECRETS_EXAMPLE" "$SECRETS_FILE"
+    chmod 600 "$SECRETS_FILE"
+    echo "  • Created $SECRETS_FILE (from example). Fill in your keys."
+  else
+    : > "$SECRETS_FILE"
+    chmod 600 "$SECRETS_FILE"
+    echo "  • Created blank $SECRETS_FILE. Fill in your keys."
+  fi
+else
+  echo "  • Secrets file already exists"
+fi
+
+# --- Symlinks ---------------------------------------------------------------
+echo "==> Linking files"
+for target src in "${(@kv)LINKS}"; do
+  if [[ -e "$src" || -L "$src" ]]; then
+    link_file "$target" "$src"
+  else
+    echo "  • Skipped (missing source): $src"
+  fi
+done
+
+# --- Optional: Homebrew packages -------------------------------------------
+if [[ -f "$REPO/Brewfile" ]]; then
+  echo "==> Brewfile found"
+  if command -v brew >/dev/null 2>&1; then
+    echo -n "Install/update Homebrew packages from Brewfile? (y/N) "
+    read -r REPLY
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      echo "==> Installing Homebrew packages..."
+      brew bundle install --file="$REPO/Brewfile"
+    else
+      echo "  • Skipped (run 'brew bundle install' in $REPO later)"
+    fi
+  else
+    echo "  • Homebrew not installed. Install from: https://brew.sh"
+    echo "  • After installing Homebrew, run: brew bundle install"
+  fi
+fi
+
+# --- Optional: verify Nerd Font (quietly) -----------------------------------
+if command -v fc-list >/dev/null 2>&1; then
+  if ! fc-list | grep -qi "Nerd Font"; then
+    echo "==> Tip: install a Nerd Font (e.g., MesloLGS NF or Fira Code NF) for Powerlevel10k symbols."
+  fi
+fi
+
+# --- Summary ----------------------------------------------------------------
+echo "==> Done."
+echo "Open a new terminal or run: exec zsh"
