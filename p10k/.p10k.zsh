@@ -37,14 +37,18 @@
   # Zsh >= 5.1 is required.
   [[ $ZSH_VERSION == (5.<1->*|<6->.*) ]] || return
 
-  # Prompt colors.
-  local grey='242'
-  local red='#FF5C57'
-  local yellow='#F3F99D'
-  local blue='#57C7FF'
-  local magenta='#FF6AC1'
-  local cyan='#9AEDFE'
-  local white='#F1F1F0'
+  # Prompt colors - Rose Pine Main theme
+  local grey='#6e6a86'
+  local red='#eb6f92'
+  local yellow='#f6c177'
+  local blue='#31748f'
+  local magenta='#c4a7e7'
+  local cyan='#9ccfd8'
+  local white='#e0def4'
+  local rose='#ebbcba'
+  local pine='#3e8fb0'
+  local foam='#9ccfd8'
+  local iris='#c4a7e7'
 
   # Left prompt segments.
   typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(

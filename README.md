@@ -26,12 +26,14 @@ dotfiles/
 │       ├── macos.zsh               # macOS-specific (terminal integration)
 │       └── local.zsh.example       # Template for machine-specific config
 ├── p10k/
-│   └── .p10k.zsh                   # Powerlevel10k theme config
-├── ghostty/
-│   └── config                      # Ghostty terminal config
-├── config/
-│   └── .config/shell/
-│       └── secrets.zsh.example     # Template for API keys (copy & fill in)
+│   └── .p10k.zsh                   # Powerlevel10k theme config (Rose Pine colors)
+├── config/                         # Everything that lives in ~/.config/
+│   ├── ghostty/
+│   │   └── config                  # Ghostty terminal config
+│   ├── shell/
+│   │   └── secrets.zsh.example     # Template for API keys (copy & fill in)
+│   └── nvim/lua/plugins/
+│       └── rose-pine.lua           # Rose Pine theme for Neovim
 ├── scripts/
 │   └── bootstrap                   # Installation script
 └── Brewfile                        # Homebrew package dependencies
@@ -71,8 +73,9 @@ If you already have zsh configs:
 - Your `.zshrc` (slim loader)
 - Your `.zprofile`
 - Your custom zsh modules (`zsh/.oh-my-zsh/custom/`)
-- Your p10k theme config
+- Your p10k theme config (with Rose Pine colors)
 - Your Ghostty terminal config
+- Your Neovim plugin configs (`config/.config/nvim/lua/plugins/`)
 - Brewfile (Homebrew package list)
 - Secrets template (example only)
 
@@ -158,11 +161,21 @@ Oh My Zsh automatically sources all `.zsh` files in the custom directory.
 
 ### Change Theme Settings
 
+**Powerlevel10k:**
 ```bash
 p10k configure
 ```
-
 This will update `~/.p10k.zsh` (which is symlinked to `p10k/.p10k.zsh` in this repo).
+
+Note: The p10k config uses Rose Pine Main color palette. If you reconfigure, you may need to reapply the colors.
+
+**Neovim (Rose Pine):**
+The Rose Pine theme is configured in `config/.config/nvim/lua/plugins/rose-pine.lua`. You can change variants by editing:
+```lua
+opts = {
+  variant = "auto", -- change to "main", "moon", or "dawn"
+}
+```
 
 ## Tips
 

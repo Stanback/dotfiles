@@ -11,12 +11,13 @@ BACKUP_SUFFIX=".$TS.bak"
 
 SECRETS_DIR="$HOME/.config/shell"
 SECRETS_FILE="$SECRETS_DIR/secrets.zsh"
-SECRETS_EXAMPLE="$REPO/config/.config/shell/secrets.zsh.example"
+SECRETS_EXAMPLE="$REPO/config/shell/secrets.zsh.example"
 
 # Installation directories
 OMZ_DIR="$HOME/.oh-my-zsh"
 P10K_DIR="$HOME/powerlevel10k"
 NVIM_CONFIG_DIR="$HOME/.config/nvim"
+NVIM_PLUGINS_DIR="$HOME/.config/nvim/lua/plugins"
 GHOSTTY_CONFIG_DIR="$HOME/.config/ghostty"
 
 # Update behavior (set UPDATE_TOOLS=yes to pull latest versions)
@@ -28,7 +29,8 @@ declare -A LINKS
 LINKS[$HOME/.zprofile]="$REPO/zsh/.zprofile"
 LINKS[$HOME/.zshrc]="$REPO/zsh/.zshrc"
 LINKS[$HOME/.p10k.zsh]="$REPO/p10k/.p10k.zsh"
-LINKS[$GHOSTTY_CONFIG_DIR]="$REPO/ghostty"
+LINKS[$GHOSTTY_CONFIG_DIR]="$REPO/config/ghostty"
+LINKS[$NVIM_PLUGINS_DIR/rose-pine.lua]="$REPO/config/nvim/lua/plugins/rose-pine.lua"
 
 # --- Helpers ----------------------------------------------------------------
 need_cmd() { command -v "$1" >/dev/null 2>&1 || { echo "Missing: $1"; exit 1; }; }
