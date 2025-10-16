@@ -1,0 +1,29 @@
+# config.local.example
+#
+# This file is a TEMPLATE for machine-specific SSH configuration.
+# Copy this to ~/.ssh/config.local and customize for this machine.
+#
+# Your main SSH config automatically includes this file via:
+#   Include ~/.ssh/config.local
+#
+# Example uses:
+# - Work-specific hosts
+# - Jump hosts with specific credentials
+# - SSH keys specific to this machine
+# - Proxy configurations
+
+# Example: Work-specific host
+# Host work-server
+#     HostName work.company.com
+#     User your-work-username
+#     IdentityFile ~/.ssh/work_id_rsa
+
+# Example: Jump host configuration
+# Host production-*
+#     ProxyJump bastion.company.com
+#     User deploy
+
+# Example: Override global settings for specific host
+# Host slow-connection
+#     ServerAliveInterval 30
+#     Compression yes

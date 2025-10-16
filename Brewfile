@@ -20,6 +20,7 @@ brew "gh"                        # GitHub CLI
 # Language Runtimes & Version Managers
 # ============================================================================
 brew "fnm"                       # Fast Node Manager (nvm alternative)
+brew "pnpm"                      # Fast, disk space efficient package manager
 brew "pyenv"                     # Python version manager
 brew "pyenv-virtualenv"          # Python virtual environment manager
 brew "poetry"                    # Python dependency management
@@ -63,6 +64,8 @@ cask "claude-code"               # Claude AI coding assistant CLI
 # Cloud & Infrastructure
 # ============================================================================
 cask "gcloud-cli"                # Google Cloud Platform CLI
+brew "flyctl"                    # Fly.io CLI
+brew "ngrok"                     # Secure tunnels to localhost
 
 # ============================================================================
 # Optional - Fonts (uncomment if needed)
@@ -70,6 +73,13 @@ cask "gcloud-cli"                # Google Cloud Platform CLI
 cask "font-fira-code"            # Fira Code font
 cask "font-fira-code-nerd-font"  # Fira Code with Nerd Font icons
 cask "font-meslo-lg-nerd-font"   # MesloLGS NF (recommended for p10k)
+
+# ============================================================================
+# Database Tools
+# ============================================================================
+brew "mysql-client"            # MySQL client (no server)
+brew "postgresql"              # PostgreSQL (server not started by default)
+brew "redis"                   # Redis (server not started by default)
 
 # ============================================================================
 # Optional - Other Tools

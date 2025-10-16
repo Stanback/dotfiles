@@ -13,15 +13,6 @@ alias gsvc='gcloud container clusters get-credentials services-cluster-1 --regio
 alias myslow='gcloud logging read "resource.type=cloudsql_database AND logName=projects/demand-io-base/logs/cloudsql.googleapis.com%2Fmysql-slow.log" --limit=300 --format="table(textPayload)"'
 alias myerr='gcloud logging read "resource.type=cloudsql_database AND logName=projects/demand-io-base/logs/cloudsql.googleapis.com%2Fmysql.err" --limit=100 --format="table(textPayload)"'
 
-# GCloud SDK paths (if installed via download)
-if [ -f '/Users/bri/Downloads/google-cloud-sdk/path.zsh.inc' ]; then
-  . '/Users/bri/Downloads/google-cloud-sdk/path.zsh.inc'
-fi
-
-if [ -f '/Users/bri/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then
-  . '/Users/bri/Downloads/google-cloud-sdk/completion.zsh.inc'
-fi
-
 # Redis connection shortcuts (dev/prod)
 alias scredisdev="redis-cli -h 10.32.0.51"
 alias scredisprod="redis-cli -h 10.113.102.99"

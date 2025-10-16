@@ -9,9 +9,14 @@ REPO="${REPO:-$HOME/dotfiles}"
 TS="$(date +%Y%m%d-%H%M%S)"
 BACKUP_SUFFIX=".$TS.bak"
 
-SECRETS_DIR="$HOME/.config/shell"
-SECRETS_FILE="$SECRETS_DIR/secrets.zsh"
-SECRETS_EXAMPLE="$REPO/config/shell/secrets.zsh.example"
+ZSH_SECRETS_FILE="$REPO/zsh/secrets.zsh"
+ZSH_SECRETS_EXAMPLE="$REPO/zsh/secrets.zsh.example"
+ZSH_LOCAL_FILE="$REPO/zsh/local.zsh"
+ZSH_LOCAL_EXAMPLE="$REPO/zsh/local.zsh.example"
+GIT_CONFIG_LOCAL="$HOME/.gitconfig.local"
+GIT_CONFIG_LOCAL_EXAMPLE="$REPO/git/.gitconfig.local.example"
+SSH_CONFIG_LOCAL="$HOME/.ssh/config.local"
+SSH_CONFIG_LOCAL_EXAMPLE="$REPO/ssh/config.local.example"
 
 # Installation directories
 OMZ_DIR="$HOME/.oh-my-zsh"
@@ -29,6 +34,8 @@ declare -A LINKS
 LINKS[$HOME/.zprofile]="$REPO/zsh/.zprofile"
 LINKS[$HOME/.zshrc]="$REPO/zsh/.zshrc"
 LINKS[$HOME/.p10k.zsh]="$REPO/p10k/.p10k.zsh"
+LINKS[$HOME/.ssh/config]="$REPO/ssh/config"
+LINKS[$HOME/.gitconfig]="$REPO/git/.gitconfig"
 LINKS[$GHOSTTY_CONFIG_DIR]="$REPO/config/ghostty"
 LINKS[$NVIM_PLUGINS_DIR/rose-pine.lua]="$REPO/config/nvim/lua/plugins/rose-pine.lua"
 
@@ -138,23 +145,56 @@ else
   echo "  • To reinstall LazyVim, backup and remove $NVIM_CONFIG_DIR first"
 fi
 
-# --- Secrets file -----------------------------------------------------------
-echo "==> Ensuring secrets file"
-mkdir -p "$SECRETS_DIR"
-if [[ ! -f "$SECRETS_FILE" ]]; then
-  if [[ -f "$SECRETS_EXAMPLE" ]]; then
-    cp "$SECRETS_EXAMPLE" "$SECRETS_FILE"
-    chmod 600 "$SECRETS_FILE"
-    echo "  • Created $SECRETS_FILE (from example). Fill in your keys."
+# --- Local config files -----------------------------------------------------
+echo "==> Ensuring local config files"
+
+# ZSH secrets
+if [[ ! -f "$ZSH_SECRETS_FILE" ]]; then
+  if [[ -f "$ZSH_SECRETS_EXAMPLE" ]]; then
+    cp "$ZSH_SECRETS_EXAMPLE" "$ZSH_SECRETS_FILE"
+    chmod 600 "$ZSH_SECRETS_FILE"
+    echo "  • Created $ZSH_SECRETS_FILE (from example). Fill in your keys."
   else
-    : > "$SECRETS_FILE"
-    chmod 600 "$SECRETS_FILE"
-    echo "  • Created blank $SECRETS_FILE. Fill in your keys."
+    : > "$ZSH_SECRETS_FILE"
+    chmod 600 "$ZSH_SECRETS_FILE"
+    echo "  • Created blank $ZSH_SECRETS_FILE. Fill in your keys."
   fi
 else
-  echo "  • Secrets file already exists (will not overwrite)"
-  # Ensure correct permissions
-  chmod 600 "$SECRETS_FILE" 2>/dev/null || true
+  echo "  • ZSH secrets file already exists (will not overwrite)"
+  chmod 600 "$ZSH_SECRETS_FILE" 2>/dev/null || true
+fi
+
+# ZSH local config
+if [[ ! -f "$ZSH_LOCAL_FILE" ]]; then
+  if [[ -f "$ZSH_LOCAL_EXAMPLE" ]]; then
+    cp "$ZSH_LOCAL_EXAMPLE" "$ZSH_LOCAL_FILE"
+    chmod 600 "$ZSH_LOCAL_FILE"
+    echo "  • Created $ZSH_LOCAL_FILE (from example). Customize as needed."
+  fi
+else
+  echo "  • ZSH local config already exists (will not overwrite)"
+  chmod 600 "$ZSH_LOCAL_FILE" 2>/dev/null || true
+fi
+
+# Git local config
+if [[ ! -f "$GIT_CONFIG_LOCAL" ]]; then
+  if [[ -f "$GIT_CONFIG_LOCAL_EXAMPLE" ]]; then
+    cp "$GIT_CONFIG_LOCAL_EXAMPLE" "$GIT_CONFIG_LOCAL"
+    echo "  • Created $GIT_CONFIG_LOCAL (from example). Fill in your name/email."
+  fi
+else
+  echo "  • Git local config already exists (will not overwrite)"
+fi
+
+# SSH local config (optional)
+if [[ ! -f "$SSH_CONFIG_LOCAL" ]]; then
+  if [[ -f "$SSH_CONFIG_LOCAL_EXAMPLE" ]]; then
+    echo "  • SSH config.local not found. Create from example if needed:"
+    echo "    cp $SSH_CONFIG_LOCAL_EXAMPLE $SSH_CONFIG_LOCAL"
+  fi
+else
+  echo "  • SSH local config already exists"
+  chmod 600 "$SSH_CONFIG_LOCAL" 2>/dev/null || true
 fi
 
 # --- Symlinks ---------------------------------------------------------------
@@ -236,7 +276,10 @@ echo "==> Bootstrap complete!"
 echo ""
 echo "Next steps:"
 echo "  1. Open a new terminal or run: exec zsh"
-echo "  2. Edit secrets file: vi ~/.config/shell/secrets.zsh"
+echo "  2. Edit config files:"
+echo "     - ZSH secrets: vi ~/dotfiles/zsh/secrets.zsh"
+echo "     - Git user info: vi ~/.gitconfig.local"
+echo "     - SSH local hosts (optional): vi ~/.ssh/config.local"
 echo "  3. Run neovim to install plugins: nvim"
 echo "  4. Restart Ghostty to load new config (or press Cmd+Shift+,)"
 echo ""

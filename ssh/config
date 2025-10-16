@@ -1,0 +1,62 @@
+# SSH Configuration
+# This file is tracked in git and shared across machines
+
+# Include machine-specific config first (overrides below if needed)
+Include ~/.ssh/config.local
+
+# Global defaults
+Host *
+    ServerAliveInterval 60
+    ServerAliveCountMax 2
+
+# Personal servers
+Host cyphergate cyphergate.com
+    HostName cyphergate.com
+    Port 61787
+    User bri
+
+Host wormhole wormhole.local
+    HostName wormhole.local
+    User bri
+
+# Web hosting
+Host vultr vultr.cyphergate.com
+    HostName vultr.cyphergate.com
+    User brian
+
+# Demand.io GCP instances
+Host io.wireguard
+    HostName wireguard-vpn
+    User bri
+
+Host io.jenkins-gcp
+    HostName jenkins-main
+    User bri
+
+Host io.prod-elastic-gcp
+    HostName elastic-prod
+    User bri
+
+Host io.dev-mongo-gcp
+    HostName mongo-dev
+    User bri
+
+Host io.prod-mongo-gcp
+    HostName mongo-prod
+    User bri
+
+Host io.dev-elastic-gcp
+    HostName elastic-dev
+    User bri
+
+Host io.bs
+    HostName bs-analysis
+    User bri
+
+Host io.wormhole
+    HostName wormhole
+    User bri
+
+Host io.blitzkong
+    HostName blitzkong
+    User bri

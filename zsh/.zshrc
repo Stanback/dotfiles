@@ -9,7 +9,7 @@ fi
 export ZSH="$HOME/.oh-my-zsh"
 
 # Point to your custom directory in the dotfiles repo
-export ZSH_CUSTOM="$HOME/dotfiles/zsh/.oh-my-zsh/custom"
+export ZSH_CUSTOM="$HOME/dotfiles/zsh"
 
 # Update behavior
 zstyle ':omz:update' mode reminder  # remind me to update when it's time
@@ -26,6 +26,3 @@ source ~/powerlevel10k/powerlevel10k.zsh-theme
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# Load secrets if present (never tracked in git)
-[[ -f ~/.config/shell/secrets.zsh ]] && source ~/.config/shell/secrets.zsh

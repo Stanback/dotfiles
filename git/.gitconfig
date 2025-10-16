@@ -1,0 +1,64 @@
+# Git Configuration
+# This file is tracked in git and shared across machines
+
+# Include machine-specific config (user info, signing keys, etc.)
+[include]
+    path = ~/.gitconfig.local
+
+[init]
+    defaultBranch = main
+
+[core]
+    editor = nvim
+    autocrlf = input
+
+[pull]
+    rebase = false
+
+[push]
+    default = simple
+    autoSetupRemote = true
+
+[fetch]
+    prune = true
+
+[diff]
+    colorMoved = zebra
+
+[merge]
+    conflictstyle = diff3
+
+[rerere]
+    enabled = true
+
+[alias]
+    # Status shortcuts
+    st = status
+    s = status -sb
+
+    # Branch operations
+    co = checkout
+    br = branch
+
+    # Commit shortcuts
+    ci = commit
+    amend = commit --amend
+
+    # Log variations
+    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    l = log --oneline --graph --decorate
+
+    # Diff shortcuts
+    d = diff
+    ds = diff --staged
+
+    # Stash operations
+    sl = stash list
+    sp = stash pop
+
+    # Remote operations
+    sync = !git fetch --all && git pull
+
+    # Undo operations
+    unstage = reset HEAD --
+    undo = reset --soft HEAD^

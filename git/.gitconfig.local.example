@@ -1,0 +1,22 @@
+# .gitconfig.local.example
+#
+# This file is a TEMPLATE for machine-specific git configuration.
+# Copy this to ~/.gitconfig.local and customize for this machine.
+#
+# Your main .gitconfig automatically includes this file via:
+#   [include]
+#       path = ~/.gitconfig.local
+
+[user]
+    name = Your Name
+    email = your.email@example.com
+    # Uncomment if you use commit signing
+    # signingkey = YOUR_GPG_KEY_ID
+
+# Uncomment if you want to sign commits
+# [commit]
+#     gpgsign = true
+
+# Machine-specific paths or settings
+# [core]
+#     sshCommand = ssh -i ~/.ssh/specific_key
