@@ -55,6 +55,11 @@ brew "mermaid-cli"               # Mermaid diagram generation
 brew "luarocks"                  # Lua package manager (for Neovim plugins)
 
 # ============================================================================
+# Development Applications
+# ============================================================================
+cask "claude-code"               # Claude AI coding assistant CLI
+
+# ============================================================================
 # Cloud & Infrastructure
 # ============================================================================
 cask "gcloud-cli"                # Google Cloud Platform CLI

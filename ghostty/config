@@ -31,28 +31,37 @@ background-blur = 12
 unfocused-split-opacity = 0.85
 
 # ——— Selection & clipboard —————————————————————————————————————————————————
-copy-on-select = clipboard           # highlight to copy
+# highlight to copy
+copy-on-select = clipboard
 selection-clear-on-copy = false
 right-click-action = copy-or-paste
 clipboard-trim-trailing-spaces = true
-clipboard-paste-protection = true    # confirm multi-line pastes
+# confirm multi-line pastes
+clipboard-paste-protection = true
 
 # ——— Mouse & scroll ————————————————————————————————————————————————————————
 mouse-hide-while-typing = true
-mouse-scroll-multiplier = 2.0        # trackpad-friendly
+# trackpad-friendly
+mouse-scroll-multiplier = 2.0
 
 # ——— Window feel ———————————————————————————————————————————————————————————
 window-padding-x = 6
 window-padding-y = 4
 window-padding-balance = true
 
+# Initial window size
+window-width = 122
+window-height = 44
+
 # ——— Links —————————————————————————————————————————————————————————————————
-link-previews = osc8                  # previews only for true terminal hyperlinks
+# previews only for true terminal hyperlinks
+link-previews = osc8
 
 # ——— Cursor ergonomics —————————————————————————————————————————————————————
 cursor-style = bar
 cursor-opacity = 0.85
-cursor-click-to-move = true          # requires shell-integration (see below)
+# requires shell-integration (see below)
+cursor-click-to-move = true
 
 # ——— Shell integration —————————————————————————————————————————————————————
 # Ghostty has BUILT-IN shell integration (no iTerm2 shell integration needed!)
@@ -63,15 +72,18 @@ cursor-click-to-move = true          # requires shell-integration (see below)
 #   • Command output selection (Cmd+triple-click)
 #   • Directory persistence (new terminals open in last working directory)
 #   • Better cursor styling at prompts
-shell-integration = true
+shell-integration = detect
 
 # ——— Scrollback: size & "search" workaround ————————————————————————————————
-scrollback-limit = 134217728         # 128 MiB per pane
+# 128 MiB per pane
+scrollback-limit = 134217728
 
 # Ghostty doesn't have native search yet, so these keybinds write scrollback
 # to a temp file and open it in your editor for searching
-keybind = super+f=write_scrollback_file:open       # Cmd+F → open full scrollback in editor
-keybind = super+shift+f=write_screen_file:open     # Cmd+Shift+F → visible screen only
+# Cmd+F → open full scrollback in editor
+keybind = super+f=write_scrollback_file:open
+# Cmd+Shift+F → visible screen only
+keybind = super+shift+f=write_screen_file:open
 
 # ——— Zoom/splits that match your flow ——————————————————————————————————————
 keybind = super+enter=toggle_split_zoom
