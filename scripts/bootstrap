@@ -153,7 +153,9 @@ if [[ ! -f "$SECRETS_FILE" ]]; then
     echo "  • Created blank $SECRETS_FILE. Fill in your keys."
   fi
 else
-  echo "  • Secrets file already exists"
+  echo "  • Secrets file already exists (will not overwrite)"
+  # Ensure correct permissions
+  chmod 600 "$SECRETS_FILE" 2>/dev/null || true
 fi
 
 # --- Symlinks ---------------------------------------------------------------
