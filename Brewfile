@@ -80,4 +80,3 @@ brew "yq"                      # YAML processor
 brew "htop"                    # Interactive process viewer
 brew "tmux"                    # Terminal multiplexer
 brew "stow"                    # Symlink farm manager
-brew "htop"                    # Process viewer

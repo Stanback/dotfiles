@@ -23,15 +23,18 @@ dotfiles/
 │       ├── env.paths.zsh           # PATH modifications
 │       ├── env.cloud.zsh           # GCP, redis shortcuts
 │       ├── ssh.zsh                 # SSH connection aliases
-│       ├── macos.zsh               # macOS-specific (iTerm2 integration)
+│       ├── macos.zsh               # macOS-specific (terminal integration)
 │       └── local.zsh.example       # Template for machine-specific config
 ├── p10k/
 │   └── .p10k.zsh                   # Powerlevel10k theme config
+├── ghostty/
+│   └── config                      # Ghostty terminal config
 ├── config/
 │   └── .config/shell/
 │       └── secrets.zsh.example     # Template for API keys (copy & fill in)
-└── scripts/
-    └── bootstrap                   # Installation script
+├── scripts/
+│   └── bootstrap                   # Installation script
+└── Brewfile                        # Homebrew package dependencies
 ```
 
 ## Quick Start
@@ -69,12 +72,14 @@ If you already have zsh configs:
 - Your `.zprofile`
 - Your custom zsh modules (`zsh/.oh-my-zsh/custom/`)
 - Your p10k theme config
+- Your Ghostty terminal config
+- Brewfile (Homebrew package list)
 - Secrets template (example only)
 
 ### Not in this repo:
 - Oh My Zsh core (installed at `~/.oh-my-zsh` by bootstrap)
 - Powerlevel10k theme (cloned to `~/powerlevel10k` by bootstrap)
-- LazyVim (installed at `~/.config/nvim` by bootstrap)
+- LazyVim (installed at `~/.config/nvim` by bootstrap, `.git` removed)
 - Actual secrets (`~/.config/shell/secrets.zsh`)
 - Machine-specific config (`local.zsh`)
 
