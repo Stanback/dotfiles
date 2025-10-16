@@ -174,12 +174,50 @@ if [[ -f "$REPO/Brewfile" ]]; then
     if [[ $REPLY =~ ^[Yy]$ ]]; then
       echo "==> Installing Homebrew packages..."
       brew bundle install --file="$REPO/Brewfile"
+
+      # Optional: Update existing packages
+      echo -n "Update existing packages? (y/N) "
+      read -r REPLY
+      if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo "  • Updating packages..."
+        brew update
+        brew upgrade
+      fi
+
+      # Optional: Cleanup
+      echo -n "Clean up unused packages? (y/N) "
+      read -r REPLY
+      if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo "  • Cleaning up..."
+        brew bundle cleanup --file="$REPO/Brewfile"
+        brew cleanup
+      fi
     else
       echo "  • Skipped (run 'brew bundle install' in $REPO later)"
     fi
   else
     echo "  • Homebrew not installed. Install from: https://brew.sh"
-    echo "  • After installing Homebrew, run: brew bundle install"
+    echo -n "Install Homebrew now? (y/N) "
+    read -r REPLY
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      echo "==> Installing Homebrew..."
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+      # Add Homebrew to PATH for Apple Silicon Macs
+      if [[ -f "/opt/homebrew/bin/brew" ]]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+      fi
+
+      # After installing Homebrew, offer to install packages
+      echo -n "Install packages from Brewfile now? (y/N) "
+      read -r REPLY
+      if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo "==> Installing Homebrew packages..."
+        brew bundle install --file="$REPO/Brewfile"
+      fi
+    else
+      echo "  • After installing Homebrew, run: brew bundle install"
+    fi
   fi
 fi
 
@@ -206,4 +244,10 @@ echo "  • Update Oh My Zsh: omz update"
 echo "  • Update Powerlevel10k: cd ~/powerlevel10k && git pull"
 echo "  • Update LazyVim plugins: nvim and run :Lazy sync"
 echo "  • Reload Ghostty config: Cmd+Shift+, (or restart Ghostty)"
+echo ""
+echo "Package management:"
+echo "  • Install packages:     brew bundle install"
+echo "  • Update Brewfile:      brew bundle dump --force"
+echo "  • Cleanup unused:       brew bundle cleanup"
+echo "  • Check for issues:     brew doctor"
 echo ""
