@@ -25,6 +25,7 @@ P10K_DIR="$HOME/powerlevel10k"
 NVIM_CONFIG_DIR="$HOME/.config/nvim"
 NVIM_PLUGINS_DIR="$HOME/.config/nvim/lua/plugins"
 GHOSTTY_CONFIG_DIR="$HOME/.config/ghostty"
+BTOP_CONFIG_DIR="$HOME/.config/btop"
 
 # Update behavior (set UPDATE_TOOLS=yes to pull latest versions)
 UPDATE_TOOLS="${UPDATE_TOOLS:-no}"
@@ -38,6 +39,7 @@ LINKS[$HOME/.p10k.zsh]="$REPO/p10k/.p10k.zsh"
 LINKS[$HOME/.ssh/config]="$REPO/ssh/config"
 LINKS[$HOME/.gitconfig]="$REPO/git/.gitconfig"
 LINKS[$GHOSTTY_CONFIG_DIR]="$REPO/config/ghostty"
+LINKS[$BTOP_CONFIG_DIR]="$REPO/config/btop"
 LINKS[$NVIM_PLUGINS_DIR/rose-pine.lua]="$REPO/config/nvim/lua/plugins/rose-pine.lua"
 
 # --- Helpers ----------------------------------------------------------------

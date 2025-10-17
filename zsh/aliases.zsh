@@ -44,3 +44,7 @@ alias lazyvimupd='nvim --headless "+Lazy! sync" +qa'
 # To exit picocom: Ctrl-C + a, Ctrl-C + q
 alias serial="picocom -b 115200 /dev/tty.usbserial-AB0P0N22"
 # alias serial="sudo cu -l /dev/tty.usbserial-AB0P0N22 -s 115200"
+
+# System monitoring
+alias top="btop"
+alias htop="btop"

@@ -18,6 +18,9 @@ font-thicken-strength = 20
 # If you ever want fewer ligatures, uncomment:
 # font-feature = -calt,-liga,-dlig
 
+# ——— Theme —————————————————————————————————————————————————————————————————
+theme = Rose Pine Moon
+
 # ——— Background & transparency —————————————————————————————————————————————
 background-opacity = 0.92
 

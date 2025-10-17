@@ -87,6 +87,6 @@ brew "redis"                   # Redis (server not started by default)
 brew "fish"                    # Fish shell
 brew "jq"                      # JSON processor
 brew "yq"                      # YAML processor
-brew "htop"                    # Interactive process viewer
+brew "btop"                    # Modern resource monitor
 brew "tmux"                    # Terminal multiplexer
 brew "stow"                    # Symlink farm manager
