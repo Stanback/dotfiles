@@ -8,6 +8,7 @@ export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 REPO="${REPO:-$HOME/dotfiles}"
 TS="$(date +%Y%m%d-%H%M%S)"
 BACKUP_SUFFIX=".$TS.bak"
+DRY_RUN="${DRY_RUN:-no}"
 
 SHELL_CONFIG_DIR="$HOME/.config/shell"
 SECRETS_FILE="$SHELL_CONFIG_DIR/secrets.zsh"
@@ -45,6 +46,35 @@ LINKS[$NVIM_PLUGINS_DIR/rose-pine.lua]="$REPO/config/nvim/lua/plugins/rose-pine.
 # --- Helpers ----------------------------------------------------------------
 need_cmd() { command -v "$1" >/dev/null 2>&1 || { echo "Missing: $1"; exit 1; }; }
 
+check_dependencies() {
+  local missing=()
+  local deps=(git curl zsh)
+
+  for cmd in "${deps[@]}"; do
+    command -v "$cmd" >/dev/null 2>&1 || missing+=("$cmd")
+  done
+
+  if [[ ${#missing[@]} -gt 0 ]]; then
+    echo "ERROR: Missing required dependencies: ${missing[*]}"
+    echo ""
+    echo "Install missing dependencies:"
+    for cmd in "${missing[@]}"; do
+      case "$cmd" in
+        git)
+          echo "  • git: xcode-select --install (or brew install git)"
+          ;;
+        curl)
+          echo "  • curl: should be pre-installed on macOS"
+          ;;
+        zsh)
+          echo "  • zsh: should be pre-installed on macOS (or brew install zsh)"
+          ;;
+      esac
+    done
+    exit 1
+  fi
+}
+
 same_link_target() {
   local target="$1" src="$2"
   [[ -L "$target" ]] && [[ "$(readlink "$target")" == "$src" ]]
@@ -63,41 +93,61 @@ backup_path() {
   if [[ -e "$path" || -L "$path" ]]; then
     local bak="${path}${BACKUP_SUFFIX}"
     echo "  • Backing up: $path -> $bak"
-    mv -f "$path" "$bak"
+    [[ "$DRY_RUN" == "yes" ]] || mv -f "$path" "$bak"
   fi
 }
 
 link_file() {
   local target="$1" src="$2"
-  mkdir -p "$(dirname "$target")"
+  [[ "$DRY_RUN" == "yes" ]] || mkdir -p "$(dirname "$target")"
   if same_link_target "$target" "$src"; then
     echo "  • OK (linked already): $target"
   else
     if [[ -e "$target" || -L "$target" ]]; then
       backup_path "$target"
     fi
-    ln -s "$src" "$target"
-    echo "  • Linked: $target -> $src"
+    if [[ "$DRY_RUN" == "yes" ]]; then
+      echo "  • Would link: $target -> $src"
+    else
+      ln -s "$src" "$target"
+      echo "  • Linked: $target -> $src"
+    fi
   fi
 }
 
 # --- Preflight --------------------------------------------------------------
-echo "==> Dotfiles bootstrap"
+if [[ "$DRY_RUN" == "yes" ]]; then
+  echo "==> Dotfiles bootstrap (DRY RUN - no changes will be made)"
+else
+  echo "==> Dotfiles bootstrap"
+fi
+
+# Check dependencies
+check_dependencies
+
 [[ -d "$REPO" ]] || { echo "Repo not found at $REPO"; exit 1; }
 [[ -f "$REPO/zsh/.zshrc" ]] || { echo "Expected $REPO/zsh/.zshrc"; exit 1; }
 
 # --- Install Oh My Zsh ------------------------------------------------------
 if [[ ! -d "$OMZ_DIR" ]]; then
   echo "==> Installing Oh My Zsh (KEEP_ZSHRC)"
-  RUNZSH=no CHSH=no KEEP_ZSHRC=yes \
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-  echo "  ✓ Oh My Zsh installed"
+  if [[ "$DRY_RUN" == "yes" ]]; then
+    echo "  • Would install Oh My Zsh to $OMZ_DIR"
+  else
+    RUNZSH=no CHSH=no KEEP_ZSHRC=yes \
+      sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    echo "  ✓ Oh My Zsh installed"
+  fi
 else
   echo "==> Oh My Zsh detected"
   if [[ "$UPDATE_TOOLS" == "yes" ]]; then
-    echo "  • Updating Oh My Zsh..."
-    (cd "$OMZ_DIR" && git pull --quiet)
-    echo "  ✓ Updated"
+    if [[ "$DRY_RUN" == "yes" ]]; then
+      echo "  • Would update Oh My Zsh"
+    else
+      echo "  • Updating Oh My Zsh..."
+      (cd "$OMZ_DIR" && git pull --quiet)
+      echo "  ✓ Updated"
+    fi
   else
     echo "  • Skipping update (set UPDATE_TOOLS=yes to update)"
   fi
@@ -106,14 +156,22 @@ fi
 # --- Install Powerlevel10k theme --------------------------------------------
 if [[ ! -d "$P10K_DIR" ]]; then
   echo "==> Installing Powerlevel10k theme"
-  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$P10K_DIR"
-  echo "  ✓ Powerlevel10k installed"
+  if [[ "$DRY_RUN" == "yes" ]]; then
+    echo "  • Would install Powerlevel10k to $P10K_DIR"
+  else
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$P10K_DIR"
+    echo "  ✓ Powerlevel10k installed"
+  fi
 else
   echo "==> Powerlevel10k detected"
   if [[ "$UPDATE_TOOLS" == "yes" ]]; then
-    echo "  • Updating Powerlevel10k..."
-    (cd "$P10K_DIR" && git pull --quiet)
-    echo "  ✓ Updated"
+    if [[ "$DRY_RUN" == "yes" ]]; then
+      echo "  • Would update Powerlevel10k"
+    else
+      echo "  • Updating Powerlevel10k..."
+      (cd "$P10K_DIR" && git pull --quiet)
+      echo "  ✓ Updated"
+    fi
   else
     echo "  • Skipping update (set UPDATE_TOOLS=yes to update)"
   fi
@@ -128,19 +186,23 @@ if [[ ! -d "$NVIM_CONFIG_DIR" ]]; then
     echo "  ⚠ Neovim not found. Install with: brew install neovim"
     echo "  • Skipping LazyVim installation"
   else
-    # Backup existing Neovim config if it exists
-    if [[ -e "$HOME/.config/nvim" || -L "$HOME/.config/nvim" ]]; then
-      backup_path "$HOME/.config/nvim"
+    if [[ "$DRY_RUN" == "yes" ]]; then
+      echo "  • Would install LazyVim to $NVIM_CONFIG_DIR"
+    else
+      # Backup existing Neovim config if it exists
+      if [[ -e "$HOME/.config/nvim" || -L "$HOME/.config/nvim" ]]; then
+        backup_path "$HOME/.config/nvim"
+      fi
+
+      # Clone LazyVim starter
+      git clone https://github.com/LazyVim/starter "$NVIM_CONFIG_DIR"
+
+      # Remove .git directory so it doesn't interfere with your dotfiles repo
+      rm -rf "$NVIM_CONFIG_DIR/.git"
+
+      echo "  ✓ LazyVim installed"
+      echo "  • Run 'nvim' to complete installation (plugins will auto-install)"
     fi
-
-    # Clone LazyVim starter
-    git clone https://github.com/LazyVim/starter "$NVIM_CONFIG_DIR"
-
-    # Remove .git directory so it doesn't interfere with your dotfiles repo
-    rm -rf "$NVIM_CONFIG_DIR/.git"
-
-    echo "  ✓ LazyVim installed"
-    echo "  • Run 'nvim' to complete installation (plugins will auto-install)"
   fi
 else
   echo "==> Neovim config detected at $NVIM_CONFIG_DIR"
@@ -152,41 +214,57 @@ fi
 echo "==> Ensuring local config files"
 
 # Create shell config directory
-mkdir -p "$SHELL_CONFIG_DIR"
+[[ "$DRY_RUN" == "yes" ]] || mkdir -p "$SHELL_CONFIG_DIR"
 
 # Secrets file
 if [[ ! -f "$SECRETS_FILE" ]]; then
   if [[ -f "$SECRETS_EXAMPLE" ]]; then
-    cp "$SECRETS_EXAMPLE" "$SECRETS_FILE"
-    chmod 600 "$SECRETS_FILE"
-    echo "  • Created $SECRETS_FILE (from example). Fill in your keys."
+    if [[ "$DRY_RUN" == "yes" ]]; then
+      echo "  • Would create $SECRETS_FILE (from example)"
+    else
+      cp "$SECRETS_EXAMPLE" "$SECRETS_FILE"
+      chmod 600 "$SECRETS_FILE"
+      echo "  • Created $SECRETS_FILE (from example). Fill in your keys."
+    fi
   else
-    : > "$SECRETS_FILE"
-    chmod 600 "$SECRETS_FILE"
-    echo "  • Created blank $SECRETS_FILE. Fill in your keys."
+    if [[ "$DRY_RUN" == "yes" ]]; then
+      echo "  • Would create blank $SECRETS_FILE"
+    else
+      : > "$SECRETS_FILE"
+      chmod 600 "$SECRETS_FILE"
+      echo "  • Created blank $SECRETS_FILE. Fill in your keys."
+    fi
   fi
 else
   echo "  • Secrets file already exists (will not overwrite)"
-  chmod 600 "$SECRETS_FILE" 2>/dev/null || true
+  [[ "$DRY_RUN" == "yes" ]] || chmod 600 "$SECRETS_FILE" 2>/dev/null || true
 fi
 
 # Local config file
 if [[ ! -f "$LOCAL_FILE" ]]; then
   if [[ -f "$LOCAL_EXAMPLE" ]]; then
-    cp "$LOCAL_EXAMPLE" "$LOCAL_FILE"
-    chmod 600 "$LOCAL_FILE"
-    echo "  • Created $LOCAL_FILE (from example). Customize as needed."
+    if [[ "$DRY_RUN" == "yes" ]]; then
+      echo "  • Would create $LOCAL_FILE (from example)"
+    else
+      cp "$LOCAL_EXAMPLE" "$LOCAL_FILE"
+      chmod 600 "$LOCAL_FILE"
+      echo "  • Created $LOCAL_FILE (from example). Customize as needed."
+    fi
   fi
 else
   echo "  • Local config already exists (will not overwrite)"
-  chmod 600 "$LOCAL_FILE" 2>/dev/null || true
+  [[ "$DRY_RUN" == "yes" ]] || chmod 600 "$LOCAL_FILE" 2>/dev/null || true
 fi
 
 # Git local config
 if [[ ! -f "$GIT_CONFIG_LOCAL" ]]; then
   if [[ -f "$GIT_CONFIG_LOCAL_EXAMPLE" ]]; then
-    cp "$GIT_CONFIG_LOCAL_EXAMPLE" "$GIT_CONFIG_LOCAL"
-    echo "  • Created $GIT_CONFIG_LOCAL (from example). Fill in your name/email."
+    if [[ "$DRY_RUN" == "yes" ]]; then
+      echo "  • Would create $GIT_CONFIG_LOCAL (from example)"
+    else
+      cp "$GIT_CONFIG_LOCAL_EXAMPLE" "$GIT_CONFIG_LOCAL"
+      echo "  • Created $GIT_CONFIG_LOCAL (from example). Fill in your name/email."
+    fi
   fi
 else
   echo "  • Git local config already exists (will not overwrite)"
@@ -200,7 +278,7 @@ if [[ ! -f "$SSH_CONFIG_LOCAL" ]]; then
   fi
 else
   echo "  • SSH local config already exists"
-  chmod 600 "$SSH_CONFIG_LOCAL" 2>/dev/null || true
+  [[ "$DRY_RUN" == "yes" ]] || chmod 600 "$SSH_CONFIG_LOCAL" 2>/dev/null || true
 fi
 
 # --- Symlinks ---------------------------------------------------------------
@@ -212,6 +290,35 @@ for target src in "${(@kv)LINKS}"; do
     echo "  • Skipped (missing source): $src"
   fi
 done
+
+# --- Git Hooks --------------------------------------------------------------
+echo "==> Setting up Git hooks"
+if [[ -f "$REPO/git/hooks/pre-commit" ]]; then
+  GIT_HOOK_TARGET="$REPO/.git/hooks/pre-commit"
+  GIT_HOOK_SRC="$REPO/git/hooks/pre-commit"
+
+  if [[ "$DRY_RUN" == "yes" ]]; then
+    echo "  • Would link pre-commit hook"
+  else
+    mkdir -p "$REPO/.git/hooks"
+    if [[ -e "$GIT_HOOK_TARGET" || -L "$GIT_HOOK_TARGET" ]]; then
+      if same_link_target "$GIT_HOOK_TARGET" "$GIT_HOOK_SRC"; then
+        echo "  • Pre-commit hook already linked"
+      else
+        backup_path "$GIT_HOOK_TARGET"
+        ln -s "$GIT_HOOK_SRC" "$GIT_HOOK_TARGET"
+        chmod +x "$GIT_HOOK_TARGET"
+        echo "  • Linked pre-commit hook"
+      fi
+    else
+      ln -s "$GIT_HOOK_SRC" "$GIT_HOOK_TARGET"
+      chmod +x "$GIT_HOOK_TARGET"
+      echo "  • Linked pre-commit hook"
+    fi
+  fi
+else
+  echo "  • Pre-commit hook not found (skipping)"
+fi
 
 # --- Optional: Homebrew packages -------------------------------------------
 if [[ -f "$REPO/Brewfile" ]]; then

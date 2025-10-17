@@ -1,0 +1,29 @@
+#!/bin/sh
+# Pre-commit hook to prevent committing secrets
+#
+# To install this hook, run:
+#   ln -s ../../git/hooks/pre-commit .git/hooks/pre-commit
+#   chmod +x .git/hooks/pre-commit
+
+# Check for common secret patterns in staged changes
+if git diff --cached --name-only | grep -qE '(secrets\.zsh|\.env|credentials\.json|\.pem|\.key)$'; then
+  echo "ERROR: Attempting to commit files that may contain secrets!"
+  echo ""
+  git diff --cached --name-only | grep -E '(secrets\.zsh|\.env|credentials\.json|\.pem|\.key)$'
+  echo ""
+  echo "These files should be gitignored. Please check your .gitignore."
+  exit 1
+fi
+
+# Check for common secret patterns in file content
+if git diff --cached | grep -E '(API_KEY|SECRET|PASSWORD|TOKEN|PRIVATE_KEY)=.{8,}'; then
+  echo "ERROR: Potential secret detected in staged changes!"
+  echo ""
+  echo "Found patterns like API_KEY=, SECRET=, PASSWORD=, TOKEN=, or PRIVATE_KEY="
+  echo ""
+  echo "If this is a false positive, you can bypass with:"
+  echo "  git commit --no-verify"
+  exit 1
+fi
+
+exit 0

@@ -31,6 +31,7 @@ brew "bun"                       # Fast JavaScript runtime & toolkit
 # ============================================================================
 # Shell & Terminal Tools
 # ============================================================================
+brew "just"                      # Command runner (like make, but simpler)
 brew "mosh"                      # Mobile shell (persistent SSH)
 brew "tree"                      # Directory visualization
 brew "fzf"                       # Fuzzy finder

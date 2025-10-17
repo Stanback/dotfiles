@@ -34,6 +34,8 @@ dotfiles/
 ├── git/
 │   ├── .gitconfig                  # Main git config with aliases
 │   ├── .gitconfig.local.example    # Template for user info
+│   ├── hooks/
+│   │   └── pre-commit              # Prevents committing secrets
 │   └── README.md
 ├── config/
 │   ├── shell/
@@ -41,12 +43,15 @@ dotfiles/
 │   │   └── local.zsh.example       # Template for machine-specific config
 │   ├── ghostty/
 │   │   └── config                  # Ghostty terminal config
+│   ├── btop/
+│   │   └── btop.conf               # btop resource monitor config
 │   └── nvim/lua/plugins/
 │       └── rose-pine.lua           # Rose Pine theme for Neovim
 ├── p10k/
 │   └── .p10k.zsh                   # Powerlevel10k theme config (Rose Pine colors)
 ├── scripts/
 │   └── bootstrap                   # Installation script
+├── Justfile                        # Task runner (like make, but simpler)
 └── Brewfile                        # Homebrew package dependencies
 ```
 
@@ -69,9 +74,11 @@ Bootstrap creates these files from templates:
 ```bash
 # Clone the repo
 git clone https://github.com/yourusername/dotfiles.git ~/dotfiles
+cd ~/dotfiles
 
 # Run bootstrap (installs OMZ, creates backups, links configs)
-~/dotfiles/scripts/bootstrap
+just install
+# Or run directly: ./scripts/bootstrap
 
 # Fill in your secrets and local configs
 vi ~/.config/shell/secrets.zsh
@@ -83,6 +90,8 @@ vi ~/.ssh/config.local  # optional
 exec zsh
 ```
 
+**Note**: If `just` is not installed, run `brew install just` first, or call the bootstrap script directly: `./scripts/bootstrap`
+
 ### Existing Machine Migration
 
 If you already have zsh configs:
@@ -90,7 +99,10 @@ If you already have zsh configs:
 ```bash
 # Bootstrap will automatically back up existing files with timestamps
 # e.g., ~/.zshrc.20231016-143022.bak
-~/dotfiles/scripts/bootstrap
+just install
+
+# Or preview what will be changed without making modifications
+just dry-run
 ```
 
 ## What Gets Tracked vs Not
@@ -148,11 +160,24 @@ The `.zshrc` sets `ZSH_CUSTOM="$HOME/dotfiles/zsh"`, which tells Oh My Zsh to au
 - Your name/email/signing keys go in `~/.gitconfig.local` (gitignored)
 - Uses `[include]` directive to load local config
 
-## Updating
+## Common Tasks
+
+Use `just` to run common tasks:
+
+```bash
+just              # Show all available commands
+just install      # Run bootstrap (initial setup)
+just update       # Update all tools (OMZ, p10k, etc.)
+just dry-run      # Preview changes without making them
+just brew         # Install Homebrew packages
+just brew-update  # Update Homebrew and packages
+just brew-cleanup # Remove unused packages
+```
 
 ### Update All Tools at Once
 ```bash
-UPDATE_TOOLS=yes ~/dotfiles/scripts/bootstrap
+just update
+# Or: UPDATE_TOOLS=yes ./scripts/bootstrap
 ```
 
 ### Update Individual Tools
@@ -179,14 +204,17 @@ cd ~/dotfiles && git pull
 
 ## Bootstrap Script Features
 
+- Checks for required dependencies (git, curl, zsh)
 - Installs Oh My Zsh if missing (with `KEEP_ZSHRC=yes`)
 - Installs Powerlevel10k theme if missing
 - Installs LazyVim (Neovim distribution) if nvim is present
 - Creates timestamped backups of existing files
 - Symlinks configs from repo to home directory
 - Creates secrets file from template (600 permissions)
+- Sets up git pre-commit hook to prevent committing secrets
 - Idempotent (safe to run multiple times)
-- Optional: Update all tools with `UPDATE_TOOLS=yes`
+- Supports dry-run mode with `DRY_RUN=yes` or `just dry-run`
+- Optional: Update all tools with `UPDATE_TOOLS=yes` or `just update`
 
 ## Customization
 
