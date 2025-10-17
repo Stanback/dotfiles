@@ -1,6 +1,6 @@
 # Secrets and local overrides - NEVER commit these!
-zsh/secrets.zsh
-zsh/local.zsh
+config/shell/secrets.zsh
+config/shell/local.zsh
 git/.gitconfig.local
 ssh/config.local
 

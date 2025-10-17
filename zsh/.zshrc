@@ -26,3 +26,7 @@ source ~/powerlevel10k/powerlevel10k.zsh-theme
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Load local overrides (secrets and machine-specific config)
+[[ -f ~/.config/shell/secrets.zsh ]] && source ~/.config/shell/secrets.zsh
+[[ -f ~/.config/shell/local.zsh ]] && source ~/.config/shell/local.zsh

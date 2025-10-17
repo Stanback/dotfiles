@@ -9,10 +9,11 @@ REPO="${REPO:-$HOME/dotfiles}"
 TS="$(date +%Y%m%d-%H%M%S)"
 BACKUP_SUFFIX=".$TS.bak"
 
-ZSH_SECRETS_FILE="$REPO/zsh/secrets.zsh"
-ZSH_SECRETS_EXAMPLE="$REPO/zsh/secrets.zsh.example"
-ZSH_LOCAL_FILE="$REPO/zsh/local.zsh"
-ZSH_LOCAL_EXAMPLE="$REPO/zsh/local.zsh.example"
+SHELL_CONFIG_DIR="$HOME/.config/shell"
+SECRETS_FILE="$SHELL_CONFIG_DIR/secrets.zsh"
+SECRETS_EXAMPLE="$REPO/config/shell/secrets.zsh.example"
+LOCAL_FILE="$SHELL_CONFIG_DIR/local.zsh"
+LOCAL_EXAMPLE="$REPO/config/shell/local.zsh.example"
 GIT_CONFIG_LOCAL="$HOME/.gitconfig.local"
 GIT_CONFIG_LOCAL_EXAMPLE="$REPO/git/.gitconfig.local.example"
 SSH_CONFIG_LOCAL="$HOME/.ssh/config.local"
@@ -148,32 +149,35 @@ fi
 # --- Local config files -----------------------------------------------------
 echo "==> Ensuring local config files"
 
-# ZSH secrets
-if [[ ! -f "$ZSH_SECRETS_FILE" ]]; then
-  if [[ -f "$ZSH_SECRETS_EXAMPLE" ]]; then
-    cp "$ZSH_SECRETS_EXAMPLE" "$ZSH_SECRETS_FILE"
-    chmod 600 "$ZSH_SECRETS_FILE"
-    echo "  • Created $ZSH_SECRETS_FILE (from example). Fill in your keys."
+# Create shell config directory
+mkdir -p "$SHELL_CONFIG_DIR"
+
+# Secrets file
+if [[ ! -f "$SECRETS_FILE" ]]; then
+  if [[ -f "$SECRETS_EXAMPLE" ]]; then
+    cp "$SECRETS_EXAMPLE" "$SECRETS_FILE"
+    chmod 600 "$SECRETS_FILE"
+    echo "  • Created $SECRETS_FILE (from example). Fill in your keys."
   else
-    : > "$ZSH_SECRETS_FILE"
-    chmod 600 "$ZSH_SECRETS_FILE"
-    echo "  • Created blank $ZSH_SECRETS_FILE. Fill in your keys."
+    : > "$SECRETS_FILE"
+    chmod 600 "$SECRETS_FILE"
+    echo "  • Created blank $SECRETS_FILE. Fill in your keys."
   fi
 else
-  echo "  • ZSH secrets file already exists (will not overwrite)"
-  chmod 600 "$ZSH_SECRETS_FILE" 2>/dev/null || true
+  echo "  • Secrets file already exists (will not overwrite)"
+  chmod 600 "$SECRETS_FILE" 2>/dev/null || true
 fi
 
-# ZSH local config
-if [[ ! -f "$ZSH_LOCAL_FILE" ]]; then
-  if [[ -f "$ZSH_LOCAL_EXAMPLE" ]]; then
-    cp "$ZSH_LOCAL_EXAMPLE" "$ZSH_LOCAL_FILE"
-    chmod 600 "$ZSH_LOCAL_FILE"
-    echo "  • Created $ZSH_LOCAL_FILE (from example). Customize as needed."
+# Local config file
+if [[ ! -f "$LOCAL_FILE" ]]; then
+  if [[ -f "$LOCAL_EXAMPLE" ]]; then
+    cp "$LOCAL_EXAMPLE" "$LOCAL_FILE"
+    chmod 600 "$LOCAL_FILE"
+    echo "  • Created $LOCAL_FILE (from example). Customize as needed."
   fi
 else
-  echo "  • ZSH local config already exists (will not overwrite)"
-  chmod 600 "$ZSH_LOCAL_FILE" 2>/dev/null || true
+  echo "  • Local config already exists (will not overwrite)"
+  chmod 600 "$LOCAL_FILE" 2>/dev/null || true
 fi
 
 # Git local config
@@ -277,7 +281,8 @@ echo ""
 echo "Next steps:"
 echo "  1. Open a new terminal or run: exec zsh"
 echo "  2. Edit config files:"
-echo "     - ZSH secrets: vi ~/dotfiles/zsh/secrets.zsh"
+echo "     - Shell secrets: vi ~/.config/shell/secrets.zsh"
+echo "     - Shell local: vi ~/.config/shell/local.zsh"
 echo "     - Git user info: vi ~/.gitconfig.local"
 echo "     - SSH local hosts (optional): vi ~/.ssh/config.local"
 echo "  3. Run neovim to install plugins: nvim"

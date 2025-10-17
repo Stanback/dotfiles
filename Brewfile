@@ -65,7 +65,7 @@ cask "claude-code"               # Claude AI coding assistant CLI
 # ============================================================================
 cask "gcloud-cli"                # Google Cloud Platform CLI
 brew "flyctl"                    # Fly.io CLI
-brew "ngrok"                     # Secure tunnels to localhost
+brew "bore-cli"                  # Modern alternative to ngrok for tunneling
 
 # ============================================================================
 # Optional - Fonts (uncomment if needed)

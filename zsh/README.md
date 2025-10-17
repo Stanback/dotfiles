@@ -14,37 +14,22 @@ These files are automatically sourced by Oh-My-Zsh via `ZSH_CUSTOM`:
 - `macos.zsh` - macOS-specific configuration (terminal integrations)
 - `ssh.zsh` - SSH connection shortcuts
 
-## Gitignored Files (never tracked)
-
-These files contain sensitive or machine-specific settings:
-
-### `secrets.zsh`
-API keys, tokens, and other sensitive credentials.
-
-**Setup:**
-```bash
-cp secrets.zsh.example ~/dotfiles/zsh/secrets.zsh
-chmod 600 ~/dotfiles/zsh/secrets.zsh
-# Edit and add your actual secrets
-```
-
-### `local.zsh`
-Machine-specific configuration that varies between computers (work laptop vs personal, different paths, etc.).
-
-**Setup:**
-```bash
-cp local.zsh.example ~/dotfiles/zsh/local.zsh
-chmod 600 ~/dotfiles/zsh/local.zsh
-# Edit and customize for this machine
-```
-
 ## How It Works
 
 Your `.zshrc`:
 1. Sets `ZSH_CUSTOM="$HOME/dotfiles/zsh"`
-2. Oh-My-Zsh auto-sources all `*.zsh` files in this directory (except gitignored ones)
-3. Manually sources `secrets.zsh` and `local.zsh` if they exist
+2. Oh-My-Zsh auto-sources all `*.zsh` files in this directory
+3. Manually sources `~/.config/shell/secrets.zsh` and `~/.config/shell/local.zsh` if they exist
+
+## Local Overrides (Gitignored)
+
+Secrets and machine-specific configuration live in `~/.config/shell/` (outside the repo):
+
+- `~/.config/shell/secrets.zsh` - API keys, tokens, sensitive credentials
+- `~/.config/shell/local.zsh` - Machine-specific config (paths, work vs personal)
+
+These files are created by the bootstrap script from templates in `config/shell/` and are manually sourced by `.zshrc`.
 
 ## Security Note
 
-Always run `chmod 600` on `secrets.zsh` and `local.zsh` to restrict access to your user only.
+The bootstrap script automatically sets `chmod 600` on secrets and local config files to restrict access to your user only.

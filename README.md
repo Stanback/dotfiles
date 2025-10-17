@@ -12,43 +12,54 @@ Clean, modular zsh configuration using Oh My Zsh and Powerlevel10k.
 
 ## Structure
 
+### In This Repo (tracked in git)
+
 ```
 dotfiles/
 ├── zsh/                            # All zsh configuration
 │   ├── .zshrc                      # Main zsh config
 │   ├── .zprofile                   # Login shell config
 │   ├── README.md                   # Setup instructions
-│   ├── aliases.zsh                 # Docker, k8s, git aliases (tracked)
-│   ├── functions.zsh               # Kubernetes helper functions (tracked)
-│   ├── env.tools.zsh               # Dev tool configs: fnm, pyenv, etc. (tracked)
-│   ├── env.paths.zsh               # PATH modifications (tracked)
-│   ├── env.cloud.zsh               # GCP, redis shortcuts (tracked)
-│   ├── ssh.zsh                     # SSH connection aliases (tracked)
-│   ├── macos.zsh                   # macOS-specific terminal integration (tracked)
-│   ├── secrets.zsh.example         # Template for API keys
-│   ├── local.zsh.example           # Template for machine-specific config
-│   ├── secrets.zsh                 # Your API keys/tokens (gitignored)
-│   └── local.zsh                   # Machine-specific overrides (gitignored)
-├── ssh/                            # SSH configuration
-│   ├── config                      # Main SSH config (tracked)
+│   ├── aliases.zsh                 # Docker, k8s, git aliases
+│   ├── functions.zsh               # Kubernetes helper functions
+│   ├── env.tools.zsh               # Dev tool configs: fnm, pyenv, etc.
+│   ├── env.paths.zsh               # PATH modifications
+│   ├── env.cloud.zsh               # GCP, redis shortcuts
+│   ├── ssh.zsh                     # SSH connection aliases
+│   └── macos.zsh                   # macOS-specific terminal integration
+├── ssh/
+│   ├── config                      # Main SSH config
 │   ├── config.local.example        # Template for machine-specific SSH
-│   ├── config.local                # Machine-specific SSH hosts (gitignored)
 │   └── README.md
-├── git/                            # Git configuration
-│   ├── .gitconfig                  # Main git config with aliases (tracked)
+├── git/
+│   ├── .gitconfig                  # Main git config with aliases
 │   ├── .gitconfig.local.example    # Template for user info
-│   ├── .gitconfig.local            # Your name/email/keys (gitignored)
 │   └── README.md
-├── p10k/
-│   └── .p10k.zsh                   # Powerlevel10k theme config (Rose Pine colors)
-├── config/                         # Everything that lives in ~/.config/
+├── config/
+│   ├── shell/
+│   │   ├── secrets.zsh.example     # Template for API keys
+│   │   └── local.zsh.example       # Template for machine-specific config
 │   ├── ghostty/
 │   │   └── config                  # Ghostty terminal config
 │   └── nvim/lua/plugins/
 │       └── rose-pine.lua           # Rose Pine theme for Neovim
+├── p10k/
+│   └── .p10k.zsh                   # Powerlevel10k theme config (Rose Pine colors)
 ├── scripts/
 │   └── bootstrap                   # Installation script
 └── Brewfile                        # Homebrew package dependencies
+```
+
+### Created in Home Directory (gitignored, never tracked)
+
+Bootstrap creates these files from templates:
+```
+~/.config/shell/
+├── secrets.zsh                     # Your API keys/tokens
+└── local.zsh                       # Machine-specific overrides
+
+~/.gitconfig.local                  # Your git name/email/signing keys
+~/.ssh/config.local                 # Machine-specific SSH hosts (optional)
 ```
 
 ## Quick Start
@@ -63,7 +74,8 @@ git clone https://github.com/yourusername/dotfiles.git ~/dotfiles
 ~/dotfiles/scripts/bootstrap
 
 # Fill in your secrets and local configs
-vi ~/dotfiles/zsh/secrets.zsh
+vi ~/.config/shell/secrets.zsh
+vi ~/.config/shell/local.zsh
 vi ~/.gitconfig.local
 vi ~/.ssh/config.local  # optional
 
@@ -108,17 +120,19 @@ The `.zshrc` sets `ZSH_CUSTOM="$HOME/dotfiles/zsh"`, which tells Oh My Zsh to au
 
 ### Secrets Management
 
-`~/dotfiles/zsh/secrets.zsh` (gitignored):
-- Created from `secrets.zsh.example` during bootstrap
+`~/.config/shell/secrets.zsh` (gitignored):
+- Created from `config/shell/secrets.zsh.example` during bootstrap
 - Stores all API keys, tokens, and sensitive data
-- Auto-sourced by Oh My Zsh (no manual sourcing needed)
+- Manually sourced in `.zshrc`
+- Lives outside repo directory for security
 
 ### Local Machine Overrides
 
-`~/dotfiles/zsh/local.zsh` (gitignored):
-- Created from `local.zsh.example`
+`~/.config/shell/local.zsh` (gitignored):
+- Created from `config/shell/local.zsh.example`
 - Machine-specific config (work vs personal, experimental aliases, etc.)
-- Auto-sourced by Oh My Zsh
+- Manually sourced in `.zshrc`
+- Lives outside repo directory
 
 ### SSH Configuration
 
