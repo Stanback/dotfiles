@@ -49,6 +49,7 @@ brew "ripgrep"                   # Fast grep alternative (rg)
 # Git Tools
 # ============================================================================
 brew "lazygit"                   # Terminal UI for git
+brew "pre-commit"                # Git pre-commit hook framework
 
 # ============================================================================
 # Documentation & Formatting

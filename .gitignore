@@ -16,3 +16,7 @@ ssh/config.local
 *~
 .vscode/
 .idea/
+
+# Application log files
+config/ghostty/*.log
+config/btop/btop.log

@@ -211,7 +211,7 @@ cd ~/dotfiles && git pull
 - Creates timestamped backups of existing files
 - Symlinks configs from repo to home directory
 - Creates secrets file from template (600 permissions)
-- Sets up git pre-commit hook to prevent committing secrets
+- Sets up pre-commit framework hooks (gitleaks, shellcheck, detect-secrets)
 - Idempotent (safe to run multiple times)
 - Supports dry-run mode with `DRY_RUN=yes` or `just dry-run`
 - Optional: Update all tools with `UPDATE_TOOLS=yes` or `just update`
@@ -246,12 +246,47 @@ opts = {
 }
 ```
 
+## Pre-Commit Hooks
+
+This repo uses the [pre-commit framework](https://pre-commit.com/) to run automated checks before each commit.
+
+### What's Checked
+
+- **Secrets Detection**: `gitleaks` and `detect-secrets` scan for API keys, tokens, and credentials
+- **Shell Linting**: `shellcheck` validates shell scripts for common issues
+- **File Quality**: trailing whitespace, end-of-file fixers, large file detection
+- **Format Validation**: YAML and JSON syntax checking
+
+### Usage
+
+```bash
+# Install hooks (done automatically by bootstrap)
+pre-commit install
+
+# Run checks manually on all files
+pre-commit run --all-files
+
+# Run checks on staged files only
+pre-commit run
+
+# Update hook versions
+pre-commit autoupdate
+```
+
+### Bypassing Hooks
+
+Only in emergencies (not recommended):
+```bash
+git commit --no-verify -m "emergency commit"
+```
+
 ## Tips
 
 - Use `local.zsh` for machine-specific tweaks (not tracked)
 - Keep secrets out of git (use `secrets.zsh`)
 - Run bootstrap after pulling repo updates to refresh symlinks
 - Install a Nerd Font (e.g., MesloLGS NF) for p10k symbols
+- Run `pre-commit run --all-files` after pulling to catch issues early
 
 ## Why This Approach?
 

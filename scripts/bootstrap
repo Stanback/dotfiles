@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 set -euo pipefail
 
 # Ensure standard PATH for commands
@@ -283,7 +283,8 @@ fi
 
 # --- Symlinks ---------------------------------------------------------------
 echo "==> Linking files"
-for target src in "${(@kv)LINKS}"; do
+for target in "${!LINKS[@]}"; do
+  src="${LINKS[$target]}"
   if [[ -e "$src" || -L "$src" ]]; then
     link_file "$target" "$src"
   else
@@ -293,6 +294,24 @@ done
 
 # --- Git Hooks --------------------------------------------------------------
 echo "==> Setting up Git hooks"
+
+# Check if pre-commit framework is installed and config exists
+if command -v pre-commit >/dev/null 2>&1 && [[ -f "$REPO/.pre-commit-config.yaml" ]]; then
+  echo "  • Installing pre-commit hooks (framework)"
+  if [[ "$DRY_RUN" == "yes" ]]; then
+    echo "    Would run: pre-commit install"
+  else
+    cd "$REPO" && pre-commit install
+    echo "  ✓ Pre-commit framework hooks installed"
+    echo "  • Run 'pre-commit run --all-files' to check existing files"
+  fi
+elif [[ -f "$REPO/.pre-commit-config.yaml" ]]; then
+  echo "  ⚠ Pre-commit config found but pre-commit is not installed"
+  echo "    Install with: brew install pre-commit"
+  echo "    Then run: pre-commit install"
+fi
+
+# Legacy: Link standalone pre-commit hook if it exists
 if [[ -f "$REPO/git/hooks/pre-commit" ]]; then
   GIT_HOOK_TARGET="$REPO/.git/hooks/pre-commit"
   GIT_HOOK_SRC="$REPO/git/hooks/pre-commit"
@@ -316,8 +335,6 @@ if [[ -f "$REPO/git/hooks/pre-commit" ]]; then
       echo "  • Linked pre-commit hook"
     fi
   fi
-else
-  echo "  • Pre-commit hook not found (skipping)"
 fi
 
 # --- Optional: Homebrew packages -------------------------------------------

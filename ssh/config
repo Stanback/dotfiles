@@ -8,6 +8,11 @@ Include ~/.ssh/config.local
 Host *
     ServerAliveInterval 60
     ServerAliveCountMax 2
+    # Security settings
+    UseKeychain yes
+    AddKeysToAgent yes
+    HashKnownHosts yes
+    VerifyHostKeyDNS yes
 
 # Personal servers
 Host cyphergate cyphergate.com
