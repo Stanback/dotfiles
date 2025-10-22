@@ -68,6 +68,7 @@ cask "claude-code"               # Claude AI coding assistant CLI
 cask "gcloud-cli"                # Google Cloud Platform CLI
 brew "flyctl"                    # Fly.io CLI
 brew "bore-cli"                  # Modern alternative to ngrok for tunneling
+brew "k9s"                       # Kubernetes CLI To Manage Your Clusters In Style
 
 # ============================================================================
 # Optional - Fonts (uncomment if needed)

@@ -1,0 +1,46 @@
+# k9s Configuration
+# https://k9scli.io/topics/config/
+
+k9s:
+  # General settings
+  liveViewAutoRefresh: true
+  refreshRate: 2
+  maxConnRetry: 5
+  readOnly: false
+  noExitOnCtrlC: false
+  ui:
+    enableMouse: true
+    headless: false
+    logoless: false
+    crumbsless: false
+    noIcons: false
+    # Use Rose Pine skin (see skins/ directory)
+    skin: rose-pine
+  skipLatestRevCheck: false
+  disablePodCounting: false
+  shellPod:
+    image: busybox:1.35.0
+    command: []
+    args: []
+    namespace: default
+    limits:
+      cpu: 100m
+      memory: 100Mi
+  imageScans:
+    enable: false
+    exclusions:
+      namespaces: []
+      labels: {}
+  logger:
+    tail: 100
+    buffer: 5000
+    sinceSeconds: -1
+    textWrap: false
+    showTime: false
+  thresholds:
+    cpu:
+      critical: 90
+      warn: 70
+    memory:
+      critical: 90
+      warn: 70

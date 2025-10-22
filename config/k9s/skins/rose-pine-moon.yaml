@@ -1,0 +1,88 @@
+# Rose Pine Moon skin for k9s
+# https://rosepinetheme.com/palette/ingredients/
+
+k9s:
+  body:
+    fgColor: "#e0def4"
+    bgColor: "default"
+    logoColor: "#3e8fb0"
+  prompt:
+    fgColor: "#e0def4"
+    bgColor: "default"
+    suggestColor: "#c4a7e7"
+  info:
+    fgColor: "#9ccfd8"
+    sectionColor: "#e0def4"
+  dialog:
+    fgColor: "#e0def4"
+    bgColor: "default"
+    buttonFgColor: "#232136"
+    buttonBgColor: "#3e8fb0"
+    buttonFocusFgColor: "#232136"
+    buttonFocusBgColor: "#c4a7e7"
+    labelFgColor: "#ea9a97"
+    fieldFgColor: "#e0def4"
+  frame:
+    border:
+      fgColor: "#393552"
+      focusColor: "#c4a7e7"
+    menu:
+      fgColor: "#e0def4"
+      keyColor: "#9ccfd8"
+      numKeyColor: "#9ccfd8"
+    crumbs:
+      fgColor: "#e0def4"
+      bgColor: "default"
+      activeColor: "#3e8fb0"
+    status:
+      newColor: "#9ccfd8"
+      modifyColor: "#c4a7e7"
+      addColor: "#3e8fb0"
+      errorColor: "#eb6f92"
+      highlightColor: "#f6c177"
+      killColor: "#56526e"
+      completedColor: "#817c9c"
+    title:
+      fgColor: "#e0def4"
+      bgColor: "default"
+      highlightColor: "#c4a7e7"
+      counterColor: "#9ccfd8"
+      filterColor: "#9ccfd8"
+  views:
+    charts:
+      bgColor: "default"
+      dialBgColor: "default"
+      defaultDialColors:
+        - "#3e8fb0"
+        - "#eb6f92"
+      defaultChartColors:
+        - "#3e8fb0"
+        - "#eb6f92"
+    table:
+      fgColor: "#e0def4"
+      bgColor: "default"
+      cursorFgColor: "#232136"
+      cursorBgColor: "#c4a7e7"
+      markColor: "#f6c177"
+      header:
+        fgColor: "#e0def4"
+        bgColor: "default"
+        sorterColor: "#9ccfd8"
+    xray:
+      fgColor: "#e0def4"
+      bgColor: "default"
+      cursorColor: "#c4a7e7"
+      graphicColor: "#3e8fb0"
+      showIcons: false
+    yaml:
+      keyColor: "#9ccfd8"
+      colonColor: "#817c9c"
+      valueColor: "#e0def4"
+    logs:
+      fgColor: "#e0def4"
+      bgColor: "default"
+      indicator:
+        fgColor: "#e0def4"
+        bgColor: "#3e8fb0"
+        toggleOnColor: "#9ccfd8"
+        toggleOffColor: "#817c9c"

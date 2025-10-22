@@ -45,6 +45,9 @@ dotfiles/
 │   │   └── config                  # Ghostty terminal config
 │   ├── btop/
 │   │   └── btop.conf               # btop resource monitor config
+│   ├── k9s/
+│   │   ├── config.yaml             # k9s Kubernetes UI config
+│   │   └── skins/                  # Rose Pine themes for k9s
 │   └── nvim/lua/plugins/
 │       └── rose-pine.lua           # Rose Pine theme for Neovim
 ├── p10k/
@@ -113,6 +116,8 @@ just dry-run
 - Your custom zsh modules (`zsh/.oh-my-zsh/custom/`)
 - Your p10k theme config (with Rose Pine colors)
 - Your Ghostty terminal config
+- Your btop resource monitor config (with Rose Pine themes)
+- Your k9s Kubernetes UI config (with Rose Pine skins)
 - Your Neovim plugin configs (`config/.config/nvim/lua/plugins/`)
 - Brewfile (Homebrew package list)
 - Secrets template (example only)

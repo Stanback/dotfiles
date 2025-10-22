@@ -1,8 +1,15 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 set -euo pipefail
 
-# Ensure standard PATH for commands
-export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+# Store command paths to avoid repeated lookups and PATH issues
+MV_CMD=$(whence -p mv)
+CP_CMD=$(whence -p cp)
+LN_CMD=$(whence -p ln)
+MKDIR_CMD=$(whence -p mkdir)
+CHMOD_CMD=$(whence -p chmod)
+RM_CMD=$(whence -p rm)
+GIT_CMD=$(whence -p git)
+CURL_CMD=$(whence -p curl)
 
 # --- Settings ---------------------------------------------------------------
 REPO="${REPO:-$HOME/dotfiles}"
@@ -27,13 +34,14 @@ NVIM_CONFIG_DIR="$HOME/.config/nvim"
 NVIM_PLUGINS_DIR="$HOME/.config/nvim/lua/plugins"
 GHOSTTY_CONFIG_DIR="$HOME/.config/ghostty"
 BTOP_CONFIG_DIR="$HOME/.config/btop"
+K9S_CONFIG_DIR="$HOME/Library/Application Support/k9s"
 
 # Update behavior (set UPDATE_TOOLS=yes to pull latest versions)
 UPDATE_TOOLS="${UPDATE_TOOLS:-no}"
 
 # Files/dirs to link: target_path -> repo_relative_path
 # Add/remove as you like.
-declare -A LINKS
+typeset -A LINKS
 LINKS[$HOME/.zprofile]="$REPO/zsh/.zprofile"
 LINKS[$HOME/.zshrc]="$REPO/zsh/.zshrc"
 LINKS[$HOME/.p10k.zsh]="$REPO/p10k/.p10k.zsh"
@@ -41,6 +49,7 @@ LINKS[$HOME/.ssh/config]="$REPO/ssh/config"
 LINKS[$HOME/.gitconfig]="$REPO/git/.gitconfig"
 LINKS[$GHOSTTY_CONFIG_DIR]="$REPO/config/ghostty"
 LINKS[$BTOP_CONFIG_DIR]="$REPO/config/btop"
+LINKS[$K9S_CONFIG_DIR]="$REPO/config/k9s"
 LINKS[$NVIM_PLUGINS_DIR/rose-pine.lua]="$REPO/config/nvim/lua/plugins/rose-pine.lua"
 
 # --- Helpers ----------------------------------------------------------------
@@ -93,13 +102,13 @@ backup_path() {
   if [[ -e "$path" || -L "$path" ]]; then
     local bak="${path}${BACKUP_SUFFIX}"
     echo "  • Backing up: $path -> $bak"
-    [[ "$DRY_RUN" == "yes" ]] || mv -f "$path" "$bak"
+    [[ "$DRY_RUN" == "yes" ]] || $MV_CMD -f "$path" "$bak"
   fi
 }
 
 link_file() {
   local target="$1" src="$2"
-  [[ "$DRY_RUN" == "yes" ]] || mkdir -p "$(dirname "$target")"
+  [[ "$DRY_RUN" == "yes" ]] || $MKDIR_CMD -p "$(dirname "$target")"
   if same_link_target "$target" "$src"; then
     echo "  • OK (linked already): $target"
   else
@@ -109,7 +118,7 @@ link_file() {
     if [[ "$DRY_RUN" == "yes" ]]; then
       echo "  • Would link: $target -> $src"
     else
-      ln -s "$src" "$target"
+      $LN_CMD -s "$src" "$target"
       echo "  • Linked: $target -> $src"
     fi
   fi
@@ -283,7 +292,7 @@ fi
 
 # --- Symlinks ---------------------------------------------------------------
 echo "==> Linking files"
-for target in "${!LINKS[@]}"; do
+for target in "${(@k)LINKS}"; do
   src="${LINKS[$target]}"
   if [[ -e "$src" || -L "$src" ]]; then
     link_file "$target" "$src"

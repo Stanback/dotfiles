@@ -20,3 +20,14 @@ ssh/config.local
 # Application log files
 config/ghostty/*.log
 config/btop/btop.log
+
+# k9s runtime files (cluster configs, user customizations)
+config/k9s/clusters/
+config/k9s/plugin.yaml
+config/k9s/plugins.yaml
+config/k9s/views.yaml
+config/k9s/hotkeys.yaml
+config/k9s/hotkey.yaml
+config/k9s/aliases.yaml
+config/k9s/alias.yaml
+config/k9s/*.log
