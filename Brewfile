@@ -27,6 +27,8 @@ brew "poetry"                    # Python dependency management
 brew "rbenv"                     # Ruby version manager
 brew "go"                        # Go programming language
 brew "bun"                       # Fast JavaScript runtime & toolkit
+brew "rustup-init"               # Rust toolchain installer
+brew "zig"                       # Zig programming language
 
 # ============================================================================
 # Shell & Terminal Tools
@@ -36,6 +38,7 @@ brew "mosh"                      # Mobile shell (persistent SSH)
 brew "tree"                      # Directory visualization
 brew "fzf"                       # Fuzzy finder
 brew "fd"                        # Modern find alternative
+brew "bat"                       # Modern cat alternative with syntax highlighting
 brew "wget"                      # HTTP/FTP file downloader
 
 # ============================================================================
