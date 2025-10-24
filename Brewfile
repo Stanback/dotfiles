@@ -64,6 +64,12 @@ brew "luarocks"                  # Lua package manager (for Neovim plugins)
 # Development Applications
 # ============================================================================
 cask "claude-code"               # Claude AI coding assistant CLI
+cask "codex"                     # OpenAI Codex CLI - ChatGPT in terminal
+
+# ============================================================================
+# AI & CLI Tools
+# ============================================================================
+brew "gemini-cli"                # Google Gemini CLI - AI in terminal
 
 # ============================================================================
 # Cloud & Infrastructure
